@@ -28,14 +28,28 @@ public class GameEngine {
 
         attempts++;
 
+        // Check if correct guess
         if (guess == target) {
             gameWon = true;
             return new GuessResult(true, "Correct! You guessed it in " + attempts + " attempts.", attempts);
-        } else if (guess < target) {
-            return new GuessResult(false, "Too low! Try a higher number.", attempts);
-        } else {
-            return new GuessResult(false, "Too high! Try a lower number.", attempts);
         }
+
+        // Check if max attempts reached
+        if (attempts >= MAX_ATTEMPTS) {
+            gameOver = true;
+            return new GuessResult(false, "Game Over! You've used all " + MAX_ATTEMPTS + " attempts. The number was " + target + ".", attempts);
+        }
+
+        // Give feedback with remaining attempts
+        int remaining = MAX_ATTEMPTS - attempts;
+        GuessResult result;
+        if (guess < target) {
+            result = new GuessResult(false, "Too low!", attempts);
+        } else {
+            result = new GuessResult(false, "Too high!", attempts);
+        }
+        result.setRemainingAttempts(remaining);
+        return result;
     }
 
     public void reset() {
@@ -53,7 +67,7 @@ public class GameEngine {
     public boolean hasUserQuit() {
         return userQuit;
     }
-    
+
     public boolean isGameOver() {
         return gameOver;
     }
